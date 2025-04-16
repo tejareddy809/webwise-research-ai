@@ -1,4 +1,26 @@
-import React from "react";
+
+import React, { useState } from "react";
+import { Check, Copy, Download, Link as LinkIcon } from "lucide-react";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "@/components/ui/tabs";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 interface Source {
   title: string;
@@ -11,15 +33,13 @@ export interface ResearchData {
   title: string;
   introduction: string;
   insights: {
-    background?: string;
-    developments?: string;
-    benefits?: string;
-  };
-  statistics: Array<{ stat: string; source: string }>;
-  expertOpinions: Array<{ expert: string; quote: string; affiliation?: string }>;
-  casestudies: Array<{ title: string; description: string }>;
+    title: string;
+    content: string;
+  }[];
+  statistics: Array<{ value: string; label: string }>;
+  expertOpinions: Array<{ name: string; title: string; quote: string }>;
   conclusion: string;
-  sources: Source[];
+  references: Source[];
 }
 
 interface ResearchReportProps {
@@ -75,7 +95,7 @@ export function ResearchReport({ data, isLoading, selectedIndustries = [] }: Res
         <div>
           <h2 className="text-2xl md:text-3xl font-bold">{data.title}</h2>
           <p className="text-gray-500 mt-1">
-            Based on {data.sources.length} authoritative sources
+            Based on {data.references.length} authoritative sources
           </p>
         </div>
         
@@ -134,9 +154,9 @@ export function ResearchReport({ data, isLoading, selectedIndustries = [] }: Res
                 </CardHeader>
                 <CardContent>
                   <ul className="list-disc pl-5 space-y-2">
-                    {data.insights.background && <li>{data.insights.background}</li>}
-                    {data.insights.developments && <li>{data.insights.developments}</li>}
-                    {data.insights.benefits && <li>{data.insights.benefits}</li>}
+                    {data.insights.map((insight, index) => (
+                      <li key={index}>{insight.content}</li>
+                    ))}
                   </ul>
                 </CardContent>
               </Card>
@@ -156,7 +176,7 @@ export function ResearchReport({ data, isLoading, selectedIndustries = [] }: Res
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-3">
-                    {data.sources.slice(0, 3).map((source, index) => (
+                    {data.references.slice(0, 3).map((source, index) => (
                       <li key={index} className="flex gap-2">
                         <LinkIcon size={16} className="mt-1 flex-shrink-0 text-research-500" />
                         <div>
@@ -164,9 +184,9 @@ export function ResearchReport({ data, isLoading, selectedIndustries = [] }: Res
                         </div>
                       </li>
                     ))}
-                    {data.sources.length > 3 && (
+                    {data.references.length > 3 && (
                       <li className="text-research-600 text-sm font-medium">
-                        + {data.sources.length - 3} more sources (view in detailed mode)
+                        + {data.references.length - 3} more sources (view in detailed mode)
                       </li>
                     )}
                   </ul>
@@ -186,32 +206,16 @@ export function ResearchReport({ data, isLoading, selectedIndustries = [] }: Res
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Background & Context</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p>{data.insights.background}</p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Current Developments & Trends</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p>{data.insights.developments}</p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Benefits & Challenges</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p>{data.insights.benefits}</p>
-                </CardContent>
-              </Card>
+              {data.insights.map((insight, index) => (
+                <Card key={index}>
+                  <CardHeader>
+                    <CardTitle>{insight.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p>{insight.content}</p>
+                  </CardContent>
+                </Card>
+              ))}
 
               <Card>
                 <CardHeader>
@@ -223,8 +227,8 @@ export function ResearchReport({ data, isLoading, selectedIndustries = [] }: Res
                       <li key={index} className="flex items-start gap-2">
                         <div className="w-2 h-2 mt-2 rounded-full bg-research-500 flex-shrink-0" />
                         <div>
-                          <p>{stat.stat}</p>
-                          <p className="text-sm text-gray-500">Source: {stat.source}</p>
+                          <p className="font-semibold">{stat.value}</p>
+                          <p className="text-gray-600">{stat.label}</p>
                         </div>
                       </li>
                     ))}
@@ -242,24 +246,8 @@ export function ResearchReport({ data, isLoading, selectedIndustries = [] }: Res
                       <div key={index} className="border-l-4 border-research-200 pl-4 py-1">
                         <p className="italic">"{opinion.quote}"</p>
                         <p className="text-sm font-semibold mt-2">
-                          — {opinion.expert}{opinion.affiliation ? `, ${opinion.affiliation}` : ''}
+                          — {opinion.name}, {opinion.title}
                         </p>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Case Studies</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {data.casestudies.map((casestudy, index) => (
-                      <div key={index} className="border border-gray-200 rounded-md p-4">
-                        <h4 className="font-semibold mb-2">{casestudy.title}</h4>
-                        <p>{casestudy.description}</p>
                       </div>
                     ))}
                   </div>
@@ -281,7 +269,7 @@ export function ResearchReport({ data, isLoading, selectedIndustries = [] }: Res
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-3">
-                    {data.sources.map((source, index) => (
+                    {data.references.map((source, index) => (
                       <li key={index} className="flex gap-2">
                         <LinkIcon size={16} className="mt-1 flex-shrink-0 text-research-500" />
                         <div>
