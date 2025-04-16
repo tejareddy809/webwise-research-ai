@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ResearchHeader } from "@/components/ResearchHeader";
 import { ResearchReport, ResearchData } from "@/components/ResearchReport";
@@ -15,17 +16,20 @@ export default function Index() {
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [apiKey, setApiKey] = useState("");
+  const [selectedIndustries, setSelectedIndustries] = useState<string[]>([]);
 
-  const handleSearch = async (query: string) => {
+  const handleSearch = async (query: string, industries: string[] = []) => {
     setIsLoading(true);
     setHasSearched(true);
+    setSelectedIndustries(industries);
     
     try {
-      const data = await generateResearch(query);
+      // Pass the selected industries to the research service
+      const data = await generateResearch(query, industries);
       setResearchData(data);
     } catch (error) {
       console.error("Error generating research:", error);
-      // In a real app, we'd handle this error properly
+      toast.error("Failed to generate research. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -117,7 +121,11 @@ export default function Index() {
           </div>
         </div>
       ) : (
-        <ResearchReport data={researchData} isLoading={isLoading} />
+        <ResearchReport 
+          data={researchData} 
+          isLoading={isLoading} 
+          selectedIndustries={selectedIndustries}
+        />
       )}
     </div>
   );

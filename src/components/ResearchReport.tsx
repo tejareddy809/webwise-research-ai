@@ -1,10 +1,4 @@
-
-import { useState } from "react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Check, Copy, Download, Link as LinkIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import React from "react";
 
 interface Source {
   title: string;
@@ -31,9 +25,10 @@ export interface ResearchData {
 interface ResearchReportProps {
   data: ResearchData | null;
   isLoading: boolean;
+  selectedIndustries?: string[];
 }
 
-export function ResearchReport({ data, isLoading }: ResearchReportProps) {
+export function ResearchReport({ data, isLoading, selectedIndustries = [] }: ResearchReportProps) {
   const [viewMode, setViewMode] = useState<"summary" | "detailed">("summary");
   const [citationStyle, setCitationStyle] = useState<string>("apa");
   const [copied, setCopied] = useState(false);
