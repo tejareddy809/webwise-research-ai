@@ -55,9 +55,9 @@ export function ResearchReport({ data, isLoading, selectedIndustries = [] }: Res
 
   if (isLoading) {
     return (
-      <div className="py-12 text-center">
-        <div className="inline-block p-4 rounded-full bg-research-100 mb-4">
-          <div className="w-8 h-8 border-4 border-research-500 border-t-transparent rounded-full animate-spin"></div>
+      <div className="py-12 text-center animate-fade-in">
+        <div className="inline-block p-4 rounded-full bg-accent/10 mb-4">
+          <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin"></div>
         </div>
         <h3 className="text-xl font-semibold">Analyzing sources and generating report...</h3>
         <p className="text-gray-500 mt-2">
@@ -90,18 +90,21 @@ export function ResearchReport({ data, isLoading, selectedIndustries = [] }: Res
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
+    <div className="max-w-6xl mx-auto px-4 py-8 animate-fade-in">
       <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h2 className="text-2xl md:text-3xl font-bold">{data.title}</h2>
+        <div className="animate-slide-up">
+          <h2 className="text-2xl md:text-3xl font-bold text-secondary">{data.title}</h2>
           <p className="text-gray-500 mt-1">
             Based on {data.references.length} authoritative sources
+            {selectedIndustries.length > 0 && (
+              <> • Focused on {selectedIndustries.join(", ")}</>
+            )}
           </p>
         </div>
         
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-3 animate-slide-up" style={{animationDelay: '100ms'}}>
           <Select value={citationStyle} onValueChange={setCitationStyle}>
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-[140px] transition-all duration-200 hover:border-accent">
               <SelectValue placeholder="Citation Style" />
             </SelectTrigger>
             <SelectContent>
@@ -114,7 +117,7 @@ export function ResearchReport({ data, isLoading, selectedIndustries = [] }: Res
           <Button 
             onClick={handleCopyText} 
             variant="outline" 
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 transition-all duration-200 hover:bg-accent hover:text-white"
           >
             {copied ? <Check size={16} /> : <Copy size={16} />}
             {copied ? "Copied" : "Copy Text"}
@@ -122,7 +125,7 @@ export function ResearchReport({ data, isLoading, selectedIndustries = [] }: Res
 
           <Button 
             variant="outline" 
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 transition-all duration-200 hover:bg-accent hover:text-white"
           >
             <Download size={16} />
             Export PDF
@@ -131,26 +134,26 @@ export function ResearchReport({ data, isLoading, selectedIndustries = [] }: Res
       </div>
 
       <Tabs defaultValue="summary" className="w-full" onValueChange={(v) => setViewMode(v as "summary" | "detailed")}>
-        <TabsList className="mb-6">
-          <TabsTrigger value="summary">Summary View</TabsTrigger>
-          <TabsTrigger value="detailed">Detailed View</TabsTrigger>
+        <TabsList className="mb-6 bg-gray-100 animate-scale-in">
+          <TabsTrigger value="summary" className="data-[state=active]:bg-accent data-[state=active]:text-white transition-all duration-200">Summary View</TabsTrigger>
+          <TabsTrigger value="detailed" className="data-[state=active]:bg-accent data-[state=active]:text-white transition-all duration-200">Detailed View</TabsTrigger>
         </TabsList>
 
         <div id="research-content">
           <TabsContent value="summary">
             <div className="grid gap-6">
-              <Card>
+              <Card className="border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 animate-scale-in">
                 <CardHeader>
-                  <CardTitle>Introduction</CardTitle>
+                  <CardTitle className="text-secondary">Introduction</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p>{data.introduction}</p>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 animate-scale-in" style={{animationDelay: '100ms'}}>
                 <CardHeader>
-                  <CardTitle>Key Insights</CardTitle>
+                  <CardTitle className="text-secondary">Key Insights</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ul className="list-disc pl-5 space-y-2">
@@ -161,31 +164,31 @@ export function ResearchReport({ data, isLoading, selectedIndustries = [] }: Res
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 animate-scale-in" style={{animationDelay: '200ms'}}>
                 <CardHeader>
-                  <CardTitle>Conclusion</CardTitle>
+                  <CardTitle className="text-secondary">Conclusion</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p>{data.conclusion}</p>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 animate-scale-in" style={{animationDelay: '300ms'}}>
                 <CardHeader>
-                  <CardTitle>Sources</CardTitle>
+                  <CardTitle className="text-secondary">Sources</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-3">
                     {data.references.slice(0, 3).map((source, index) => (
                       <li key={index} className="flex gap-2">
-                        <LinkIcon size={16} className="mt-1 flex-shrink-0 text-research-500" />
+                        <LinkIcon size={16} className="mt-1 flex-shrink-0 text-accent" />
                         <div>
                           <p className="text-sm">{formatSourceCitation(source)}</p>
                         </div>
                       </li>
                     ))}
                     {data.references.length > 3 && (
-                      <li className="text-research-600 text-sm font-medium">
+                      <li className="text-accent text-sm font-medium">
                         + {data.references.length - 3} more sources (view in detailed mode)
                       </li>
                     )}
@@ -197,9 +200,9 @@ export function ResearchReport({ data, isLoading, selectedIndustries = [] }: Res
 
           <TabsContent value="detailed">
             <div className="grid gap-6">
-              <Card>
+              <Card className="border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 animate-scale-in">
                 <CardHeader>
-                  <CardTitle>Introduction</CardTitle>
+                  <CardTitle className="text-secondary">Introduction</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p>{data.introduction}</p>
@@ -207,9 +210,9 @@ export function ResearchReport({ data, isLoading, selectedIndustries = [] }: Res
               </Card>
 
               {data.insights.map((insight, index) => (
-                <Card key={index}>
+                <Card key={index} className="border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 animate-scale-in" style={{animationDelay: `${index * 100}ms`}}>
                   <CardHeader>
-                    <CardTitle>{insight.title}</CardTitle>
+                    <CardTitle className="text-secondary">{insight.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p>{insight.content}</p>
@@ -217,15 +220,15 @@ export function ResearchReport({ data, isLoading, selectedIndustries = [] }: Res
                 </Card>
               ))}
 
-              <Card>
+              <Card className="border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 animate-scale-in" style={{animationDelay: '300ms'}}>
                 <CardHeader>
-                  <CardTitle>Key Statistics</CardTitle>
+                  <CardTitle className="text-secondary">Key Statistics</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-3">
                     {data.statistics.map((stat, index) => (
                       <li key={index} className="flex items-start gap-2">
-                        <div className="w-2 h-2 mt-2 rounded-full bg-research-500 flex-shrink-0" />
+                        <div className="w-2 h-2 mt-2 rounded-full bg-accent flex-shrink-0" />
                         <div>
                           <p className="font-semibold">{stat.value}</p>
                           <p className="text-gray-600">{stat.label}</p>
@@ -236,14 +239,14 @@ export function ResearchReport({ data, isLoading, selectedIndustries = [] }: Res
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 animate-scale-in" style={{animationDelay: '400ms'}}>
                 <CardHeader>
-                  <CardTitle>Expert Opinions</CardTitle>
+                  <CardTitle className="text-secondary">Expert Opinions</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {data.expertOpinions.map((opinion, index) => (
-                      <div key={index} className="border-l-4 border-research-200 pl-4 py-1">
+                      <div key={index} className="border-l-4 border-accent/20 pl-4 py-1 hover:border-accent transition-all duration-200">
                         <p className="italic">"{opinion.quote}"</p>
                         <p className="text-sm font-semibold mt-2">
                           — {opinion.name}, {opinion.title}
@@ -254,31 +257,31 @@ export function ResearchReport({ data, isLoading, selectedIndustries = [] }: Res
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 animate-scale-in" style={{animationDelay: '500ms'}}>
                 <CardHeader>
-                  <CardTitle>Conclusion</CardTitle>
+                  <CardTitle className="text-secondary">Conclusion</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p>{data.conclusion}</p>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 animate-scale-in" style={{animationDelay: '600ms'}}>
                 <CardHeader>
-                  <CardTitle>References</CardTitle>
+                  <CardTitle className="text-secondary">References</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-3">
                     {data.references.map((source, index) => (
                       <li key={index} className="flex gap-2">
-                        <LinkIcon size={16} className="mt-1 flex-shrink-0 text-research-500" />
+                        <LinkIcon size={16} className="mt-1 flex-shrink-0 text-accent" />
                         <div>
                           <p className="text-sm">{formatSourceCitation(source)}</p>
                           <a 
                             href={source.url} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="text-sm text-research-600 hover:underline"
+                            className="text-sm text-accent hover:underline transition-all duration-200"
                           >
                             Visit Source
                           </a>

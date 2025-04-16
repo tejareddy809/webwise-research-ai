@@ -45,16 +45,16 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-white">
       <ResearchHeader onSearch={handleSearch} />
       
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="outline" className="fixed top-4 right-4">
+          <Button variant="outline" className="fixed top-4 right-4 z-50 transition-all duration-200 hover:bg-accent hover:text-white">
             <Key className="mr-2 h-4 w-4" /> Add OpenAI Key
           </Button>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Add OpenAI API Key</DialogTitle>
           </DialogHeader>
@@ -64,8 +64,12 @@ export default function Index() {
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
               type="password"
+              className="transition-all duration-200 focus-visible:ring-accent"
             />
-            <Button onClick={handleApiKeySave} className="w-full">
+            <Button 
+              onClick={handleApiKeySave} 
+              className="w-full bg-accent hover:bg-accent/90 text-white transition-all duration-200"
+            >
               Save API Key
             </Button>
           </div>
@@ -78,42 +82,48 @@ export default function Index() {
 
       {!hasSearched ? (
         <div className="max-w-6xl mx-auto px-4 py-12">
-          <h2 className="text-2xl font-bold text-center mb-10">Your AI-Powered Research Assistant</h2>
+          <h2 className="text-2xl font-bold text-center mb-10 text-secondary animate-fade-in">The Ultimate Research Assistant</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <FeatureCard
-              icon={<Search className="h-8 w-8 text-research-500" />}
+              icon={<Search className="h-8 w-8 text-accent" />}
               title="Web Search & Analysis"
               description="Searches the entire web for the latest, most relevant information on your topic from authoritative sources."
+              delay={0}
             />
             <FeatureCard
-              icon={<Brain className="h-8 w-8 text-research-500" />}
+              icon={<Brain className="h-8 w-8 text-accent" />}
               title="Smart Information Filtering"
               description="Removes redundant, outdated, or biased content to deliver only high-quality, factual information."
+              delay={100}
             />
             <FeatureCard
-              icon={<FileText className="h-8 w-8 text-research-500" />}
+              icon={<FileText className="h-8 w-8 text-accent" />}
               title="Structured Reports"
               description="Generates well-organized research reports with introduction, key insights, data points, and conclusions."
+              delay={200}
             />
             <FeatureCard
-              icon={<BarChart className="h-8 w-8 text-research-500" />}
+              icon={<BarChart className="h-8 w-8 text-accent" />}
               title="Statistics & Data"
               description="Includes verifiable numbers, percentages, and real-world figures to support your research."
+              delay={300}
             />
             <FeatureCard
-              icon={<Lightbulb className="h-8 w-8 text-research-500" />}
+              icon={<Lightbulb className="h-8 w-8 text-accent" />}
               title="Expert Opinions"
               description="Summarizes views from thought leaders, researchers, and industry professionals on your topic."
+              delay={400}
             />
             <FeatureCard
-              icon={<Book className="h-8 w-8 text-research-500" />}
+              icon={<Book className="h-8 w-8 text-accent" />}
               title="Cited Sources"
               description="Every insight comes with proper citations and references in your preferred academic style."
+              delay={500}
             />
           </div>
           
-          <div className="mt-12 text-center">
+          <div className="mt-12 text-center animate-fade-in">
             <p className="text-gray-500">
               Try searching for topics like "Artificial Intelligence in Healthcare", "Climate Change Solutions", 
               "Remote Work Trends", or any subject you're interested in researching.
@@ -131,16 +141,17 @@ export default function Index() {
   );
 }
 
-function FeatureCard({ icon, title, description }: { 
+function FeatureCard({ icon, title, description, delay = 0 }: { 
   icon: React.ReactNode;
   title: string;
   description: string;
+  delay?: number;
 }) {
   return (
-    <Card className="border border-gray-200 hover:shadow-md transition-shadow">
+    <Card className="border border-gray-100 hover:shadow-lg transition-all duration-300 hover:translate-y-[-5px] animate-slide-up" style={{animationDelay: `${delay}ms`}}>
       <CardContent className="pt-6">
-        <div className="mb-4">{icon}</div>
-        <h3 className="text-lg font-semibold mb-2">{title}</h3>
+        <div className="mb-4 transition-all duration-300 transform hover:scale-110">{icon}</div>
+        <h3 className="text-lg font-semibold mb-2 text-secondary">{title}</h3>
         <p className="text-gray-600">{description}</p>
       </CardContent>
     </Card>

@@ -48,18 +48,18 @@ export function ResearchHeader({ onSearch }: ResearchHeaderProps) {
   };
 
   return (
-    <div className="bg-research-700 text-white py-8 px-4 md:px-8">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl md:text-4xl font-bold mb-2">WebWise Research AI</h1>
+    <div className="bg-accent text-white py-8 px-4 md:px-8 transition-all-300">
+      <div className="max-w-6xl mx-auto animate-fade-in">
+        <h1 className="text-3xl md:text-4xl font-bold mb-2">Apex</h1>
         <p className="text-lg md:text-xl mb-8 opacity-90">
-          Generate comprehensive research reports on any topic
+          Highest level of research assistance
         </p>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-3xl">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-3xl animate-slide-up">
           <div className="flex flex-col md:flex-row gap-3">
             <div className="flex-1 relative">
               <Input
-                className="w-full pl-4 pr-12 py-3 text-lg text-black border-2 border-research-300 focus-visible:ring-research-500 h-14"
+                className="w-full pl-4 pr-12 py-3 text-lg text-secondary border-2 border-accent-100 focus-visible:ring-accent h-14 transition-all duration-200 hover:border-accent-300"
                 placeholder="Enter your research topic..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -68,7 +68,7 @@ export function ResearchHeader({ onSearch }: ResearchHeaderProps) {
             </div>
             <Button 
               type="submit" 
-              className="h-14 px-6 bg-research-500 hover:bg-research-600 text-white"
+              className="h-14 px-6 bg-secondary hover:bg-secondary/90 text-white transition-all duration-200 transform hover:scale-105"
               disabled={!query.trim()}
             >
               Research Now
@@ -78,28 +78,29 @@ export function ResearchHeader({ onSearch }: ResearchHeaderProps) {
           <Collapsible 
             open={isFiltersOpen} 
             onOpenChange={setIsFiltersOpen}
-            className="bg-research-600 rounded-md p-3"
+            className="bg-accent/80 backdrop-blur-sm rounded-md p-3 transition-all duration-300 animate-scale-in"
           >
-            <CollapsibleTrigger className="flex items-center gap-2 w-full justify-between text-left text-white py-1">
+            <CollapsibleTrigger className="flex items-center gap-2 w-full justify-between text-left text-white py-1 hover:bg-accent/50 rounded-md px-2 transition-all duration-200">
               <div className="flex items-center gap-2">
                 <Building size={20} />
                 <span className="font-medium">Filter by Industry</span>
                 {selectedIndustries.length > 0 && (
-                  <span className="bg-research-500 text-white text-xs px-2 py-1 rounded-full">
+                  <span className="bg-white text-accent text-xs px-2 py-1 rounded-full">
                     {selectedIndustries.length}
                   </span>
                 )}
               </div>
               {isFiltersOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
             </CollapsibleTrigger>
-            <CollapsibleContent className="mt-3">
+            <CollapsibleContent className="mt-3 transition-all duration-300">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {industries.map((industry) => (
-                  <div key={industry.id} className="flex items-center space-x-2">
+                  <div key={industry.id} className="flex items-center space-x-2 hover:bg-accent/50 p-2 rounded-md transition-all duration-200">
                     <Checkbox 
                       id={industry.id} 
                       checked={selectedIndustries.includes(industry.id)}
                       onCheckedChange={() => toggleIndustry(industry.id)}
+                      className="border-white data-[state=checked]:bg-white data-[state=checked]:text-accent"
                     />
                     <label 
                       htmlFor={industry.id} 
