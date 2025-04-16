@@ -51,7 +51,7 @@ export default function Index() {
       <Dialog>
         <DialogTrigger asChild>
           <Button variant="outline" className="fixed top-4 right-4 z-50 transition-all duration-200 hover:bg-accent hover:text-white">
-            <Key className="mr-2 h-4 w-4" /> Add OpenAI Key
+            <Key className="mr-2 h-4 w-4" /> Key
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">
