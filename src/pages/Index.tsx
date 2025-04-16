@@ -1,15 +1,20 @@
-
 import { useState } from "react";
 import { ResearchHeader } from "@/components/ResearchHeader";
 import { ResearchReport, ResearchData } from "@/components/ResearchReport";
 import { generateResearch } from "@/services/researchService";
 import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Key } from "lucide-react";
 import { Brain, Book, Search, FileText, Lightbulb, BarChart } from "lucide-react";
+import { toast } from "sonner";
 
 export default function Index() {
   const [researchData, setResearchData] = useState<ResearchData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+  const [apiKey, setApiKey] = useState("");
 
   const handleSearch = async (query: string) => {
     setIsLoading(true);
@@ -26,10 +31,47 @@ export default function Index() {
     }
   };
 
+  const handleApiKeySave = () => {
+    if (apiKey.trim().length > 0) {
+      localStorage.setItem('openai_api_key', apiKey);
+      toast.success("API Key saved successfully");
+    } else {
+      toast.error("Please enter a valid API key");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50">
       <ResearchHeader onSearch={handleSearch} />
       
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button variant="outline" className="fixed top-4 right-4">
+            <Key className="mr-2 h-4 w-4" /> Add OpenAI Key
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add OpenAI API Key</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Input 
+              placeholder="Paste your OpenAI API key" 
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              type="password"
+            />
+            <Button onClick={handleApiKeySave} className="w-full">
+              Save API Key
+            </Button>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Note: API keys are stored locally in your browser. For secure storage, 
+            we recommend using Supabase secrets.
+          </p>
+        </DialogContent>
+      </Dialog>
+
       {!hasSearched ? (
         <div className="max-w-6xl mx-auto px-4 py-12">
           <h2 className="text-2xl font-bold text-center mb-10">Your AI-Powered Research Assistant</h2>
